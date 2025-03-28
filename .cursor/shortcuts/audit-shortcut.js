@@ -79,18 +79,30 @@ export default {
     // ここでは function_list.txt をローカルで取得する実装例
     // （もし「監査対象パッケージから提供」されるなら別途HTTPなどで受け取ってもOK）
     const functionList = getFunctionListLocally();
+    const payload = {
+      request: "直近のコード変更の監査をお願いします",
+      modification_description: modificationDescription,
+      code_changes: codeChanges,
+      function_list: functionList,
+      changed_files: changedFiles,
+    };
 
-    // MCPツール 'audit' 呼び出しをCursorエージェントに依頼
-    api.chat.sendMessage(`
-Use the "audit" tool with the following JSON parameters:
+    // 出力用の文字列
+    // （Cursorのチャット欄に表示されるだけなので、
+    //   ユーザがコピペしやすいようフォーマットする）
+    const message = `以下をコピーして監査サーバーに送信してください:
 
+\`\`\`json
 {
-  "request": "直近のコード変更の監査をお願いします",
-  "modification_description": "${modificationDescription}",
-  "code_changes": \`${codeChanges}\`,
-  "function_list": \`${functionList}\`,
-  "changed_files": ${JSON.stringify(changedFiles)}
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tool/audit",
+  "params": ${JSON.stringify(payload, null, 2)}
 }
-    `);
+\`\`\`
+`;
+
+    // チャット欄にこのメッセージを表示
+    api.chat.sendMessage(message);
   },
 };

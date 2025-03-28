@@ -1,0 +1,1 @@
+./pre_audit.sh | grep -A 999 '```json' | grep -v '```' | curl -X POST http://localhost:ポート番号 -H "Content-Type: application/json" -d @-

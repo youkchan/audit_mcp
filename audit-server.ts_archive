@@ -38,7 +38,7 @@ async function callOpenAIAudit(inputData: {
   changed_files?: string[];  // 変更ファイル一覧
 }): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey || apiKey.trim() === "") {
+  if (!apiKey) {
     throw new Error("環境変数 OPENAI_API_KEY が設定されていません。");
   }
 
